@@ -1,5 +1,5 @@
-Orange POC Configuration
-========================
+MSO Configuration
+=================
 
 This repository provides files to:
 * configure Docker (compose, etc.)
