@@ -18,7 +18,11 @@
 ################################### Functions definition ################################
 
 
-if [ "$#" -ne 6 ]; then
+if [ "$#" = 0 ]; then
+	echo "Deploying with local images, not pulling them from Nexus."
+	NO_NEXUS=true
+fi
+if [ "$#" -ne 6 ] & [ ! $NO_NEXUS ]; then
 	    echo "Usage: deploy.sh <NEXUS_HOST_MSO:NEXUS_PORT_MSO> <NEXUS_LOGIN_MSO> <NEXUS_PASSWORD_MSO> <NEXUS_HOST_MARIADB:NEXUS_PORT_MARIADB> <NEXUS_LOGIN_MARIADB> <NEXUS_PASSWORD_MARIADB>
 	          - env DOCKER_HOST (optional) 
 	             sets the docker host to be used if not local unix socket 
@@ -33,7 +37,7 @@ if [ "$#" -ne 6 ]; then
 	    
 	    exit 1
 fi
-if [ -z "$MSO_DOCKER_IMAGE_VERSION" ]; then   
+if [ -z "$MSO_DOCKER_IMAGE_VERSION" ] & [ ! $NO_NEXUS ]; then
 	    echo "Env variable MSO_DOCKER_IMAGE_VERSION must be SET to a version before running this script" 
 	    exit 1
 fi
@@ -127,7 +131,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 init_docker_command
 update_json_config
-pull_docker_images
+if [ ! $NO_NEXUS ]; then
+	pull_docker_images
+fi
 
 # don't remove the containers,no cleanup
 #$DOCKER_COMPOSE_CMD stop 
