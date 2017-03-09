@@ -17,29 +17,31 @@
 #     | phase.
 ################################### Functions definition ################################
 
-
+NEXUS=1
 if [ "$#" = 0 ]; then
-	echo "Deploying with local images, not pulling them from Nexus."
-	NO_NEXUS=true
+    echo "Deploying with local images, not pulling them from Nexus."
+    NEXUS=0
 fi
-if [ "$#" -ne 6 ] & [ ! $NO_NEXUS ]; then
-	    echo "Usage: deploy.sh <NEXUS_HOST_MSO:NEXUS_PORT_MSO> <NEXUS_LOGIN_MSO> <NEXUS_PASSWORD_MSO> <NEXUS_HOST_MARIADB:NEXUS_PORT_MARIADB> <NEXUS_LOGIN_MARIADB> <NEXUS_PASSWORD_MARIADB>
-	          - env DOCKER_HOST (optional) 
-	             sets the docker host to be used if not local unix socket 
-	 
-	 		  - env MSO_DOCKER_IMAGE_VERSION (required)
-	             sets the mso docker image version
-	 
-	          - env MSO_CONFIG_UPDATES (optional) 
-	            json structure that matches volumes/mso/chef-config/mso-docker.json 
-	            elements whose value needs to be updated before the deployment 
-	            phase."
-	    
-	    exit 1
+
+if [ "$#" -ne 6 ] && [ $NEXUS -eq 1 ]; then
+        echo "Usage: deploy.sh <NEXUS_HOST_MSO:NEXUS_PORT_MSO> <NEXUS_LOGIN_MSO> <NEXUS_PASSWORD_MSO> <NEXUS_HOST_MARIADB:NEXUS_PORT_MARIADB> <NEXUS_LOGIN_MARIADB> <NEXUS_PASSWORD_MARIADB>
+              - env DOCKER_HOST (optional) 
+                 sets the docker host to be used if not local unix socket 
+     
+              - env MSO_DOCKER_IMAGE_VERSION (required)
+                 sets the mso docker image version
+     
+              - env MSO_CONFIG_UPDATES (optional) 
+                json structure that matches volumes/mso/chef-config/mso-docker.json 
+                elements whose value needs to be updated before the deployment 
+                phase."
+        
+        exit 1
 fi
-if [ -z "$MSO_DOCKER_IMAGE_VERSION" ] & [ ! $NO_NEXUS ]; then
-	    echo "Env variable MSO_DOCKER_IMAGE_VERSION must be SET to a version before running this script" 
-	    exit 1
+
+if [ -z "$MSO_DOCKER_IMAGE_VERSION" ] && [ $NEXUS -eq 1 ]; then
+        echo "Env variable MSO_DOCKER_IMAGE_VERSION must be SET to a version before running this script" 
+        exit 1
 fi
 
 NEXUS_DOCKER_REPO_MSO=$1
@@ -52,23 +54,23 @@ NEXUS_PASSWD_MARIADB=$6
 
 
 function init_docker_command() {
-	if [ -z ${DOCKER_HOST+x} ];
-	then
-	    DOCKER_CMD="docker"
-	    LBL_DOCKER_HOST="local docker using unix socket"
-	else
-	    DOCKER_CMD="docker -H ${DOCKER_HOST}"
-	    LBL_DOCKER_HOST="(remote) docker using ${DOCKER_HOST}"  
-	fi
+    if [ -z ${DOCKER_HOST+x} ];
+    then
+        DOCKER_CMD="docker"
+        LBL_DOCKER_HOST="local docker using unix socket"
+    else
+        DOCKER_CMD="docker -H ${DOCKER_HOST}"
+        LBL_DOCKER_HOST="(remote) docker using ${DOCKER_HOST}"  
+    fi
 
-	if [ -f "/opt/docker/docker-compose" ];
-	then
-    	DOCKER_COMPOSE_CMD="/opt/docker/docker-compose"
-	else
-	    DOCKER_COMPOSE_CMD="docker-compose"
-	fi
+    if [ -f "/opt/docker/docker-compose" ];
+    then
+        DOCKER_COMPOSE_CMD="/opt/docker/docker-compose"
+    else
+        DOCKER_COMPOSE_CMD="docker-compose"
+    fi
 
-	echo "docker command: ${LBL_DOCKER_HOST}"
+    echo "docker command: ${LBL_DOCKER_HOST}"
 }
 
 function container_name() {
@@ -78,30 +80,30 @@ function container_name() {
 }
 
 function update_json_config() {
-	if [ -n "$MSO_CONFIG_UPDATES" ];
-	then   
-	    chmod u+x $SCRIPT_DIR/json_updater.py
-	    echo $MSO_CONFIG_UPDATES | $SCRIPT_DIR/json_updater.py $SCRIPT_DIR/volumes/mso/chef-config/mso-docker.json
-	    echo "MSO docker JSON updated"
-	fi
-	
+    if [ -n "$MSO_CONFIG_UPDATES" ];
+    then   
+        chmod u+x $SCRIPT_DIR/json_updater.py
+        echo $MSO_CONFIG_UPDATES | $SCRIPT_DIR/json_updater.py $SCRIPT_DIR/volumes/mso/chef-config/mso-docker.json
+        echo "MSO docker JSON updated"
+    fi
+    
 }
 
 function pull_docker_images() {
-	echo "Using Nexus for MSO: $NEXUS_DOCKER_REPO_MSO (user "$NEXUS_USERNAME_MSO")"
-	# login to nexus
-	$DOCKER_CMD login -u $NEXUS_USERNAME_MSO -p $NEXUS_PASSWD_MSO $NEXUS_DOCKER_REPO_MSO
-	$DOCKER_CMD login -u $NEXUS_USERNAME_MARIADB -p $NEXUS_PASSWD_MARIADB $NEXUS_DOCKER_REPO_MARIADB
-	
-	# get images
-	$DOCKER_CMD pull $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION
-	$DOCKER_CMD tag $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION openecomp/mso:latest
-	$DOCKER_CMD rmi $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION
-	
-	echo "Using Nexus for MARIADB: $NEXUS_DOCKER_REPO_MARIADB (user "$NEXUS_USERNAME_MARIADB")"
-	$DOCKER_CMD pull $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11
-	$DOCKER_CMD tag  $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11  mariadb:10.1.11
-	$DOCKER_CMD rmi $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11
+    echo "Using Nexus for MSO: $NEXUS_DOCKER_REPO_MSO (user "$NEXUS_USERNAME_MSO")"
+    # login to nexus
+    $DOCKER_CMD login -u $NEXUS_USERNAME_MSO -p $NEXUS_PASSWD_MSO $NEXUS_DOCKER_REPO_MSO
+    $DOCKER_CMD login -u $NEXUS_USERNAME_MARIADB -p $NEXUS_PASSWD_MARIADB $NEXUS_DOCKER_REPO_MARIADB
+    
+    # get images
+    $DOCKER_CMD pull $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION
+    $DOCKER_CMD tag $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION openecomp/mso:latest
+    $DOCKER_CMD rmi $NEXUS_DOCKER_REPO_MSO/openecomp/mso:$MSO_DOCKER_IMAGE_VERSION
+    
+    echo "Using Nexus for MARIADB: $NEXUS_DOCKER_REPO_MARIADB (user "$NEXUS_USERNAME_MARIADB")"
+    $DOCKER_CMD pull $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11
+    $DOCKER_CMD tag  $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11  mariadb:10.1.11
+    $DOCKER_CMD rmi $NEXUS_DOCKER_REPO_MARIADB/mariadb:10.1.11
 
 }
 
@@ -114,15 +116,15 @@ function wait_for_mariadb() {
     AMOUNT_STARTUP=$($DOCKER_CMD logs ${CONTAINER_NAME} 2>&1 | grep 'mysqld: ready for connections.' | wc -l)
     while [[ ${AMOUNT_STARTUP} -lt 2 ]];
     do
-	echo "Waiting for '$CONTAINER_NAME' deployment to finish ..."
-	AMOUNT_STARTUP=$($DOCKER_CMD logs ${CONTAINER_NAME} 2>&1 | grep 'mysqld: ready for connections.' | wc -l)
-	if [ "$TIMEOUT" = "0" ];
-	then
-	    echo "ERROR: Mariadb deployment failed."
-	    exit 1
-	fi
-	let TIMEOUT-=1
-	sleep 1       
+    echo "Waiting for '$CONTAINER_NAME' deployment to finish ..."
+    AMOUNT_STARTUP=$($DOCKER_CMD logs ${CONTAINER_NAME} 2>&1 | grep 'mysqld: ready for connections.' | wc -l)
+    if [ "$TIMEOUT" = "0" ];
+    then
+        echo "ERROR: Mariadb deployment failed."
+        exit 1
+    fi
+    let TIMEOUT-=1
+    sleep 1       
     done
 }
 
@@ -131,8 +133,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 init_docker_command
 update_json_config
-if [ ! $NO_NEXUS ]; then
-	pull_docker_images
+if [ $NEXUS -eq 1 ]; then
+    pull_docker_images
 fi
 
 # don't remove the containers,no cleanup
