@@ -1,199 +1,259 @@
 {
-    "name": "mso-docker",
-    "description": "MSO Docker Images",
-    "chef_type": "environment",
-    "json_class": "Chef::Environment",
-    "default_attributes":
+  "name": "mso-docker",
+  "description": "MSO Docker Images",
+  "chef_type": "environment",
+  "json_class": "Chef::Environment",
+  "default_attributes":
+  {
+    "mso_config_path": "/etc/mso/config.d/",
+
+    "mso-api-handler-infra-config":
     {
-        "mso_config_path": "/etc/mso/config.d/",
+      "bpelURL": "http://mso:8080",
+      "bpelAuth": "786864AA53D0DCD881AED1154230C0C3058D58B9339D2EFB6193A0F0D82530E1",
+      "camundaURL": "http://mso:8080",
+      "camundaAuth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1"
+    },
 
-        "mso-api-handler-infra-config":
+    "asdc-connections":
+    {
+      "asdc-controller1":
+      {
+        "user": "mso",
+        "consumerGroup": "sdc-OpenSource-Env1",
+        "consumerId": "sdc-COpenSource-Env11",
+        "environmentName": "SDC-OpenSource-Env1",
+        "asdcAddress": "c2.vm1.sdc.simpledemo.openecomp.org:8443",
+        "password": "613AF3483E695524F9857643B697FA51C7A9A0951094F53791485BF3458F9EADA37DBACCCEBD0CB242B85B4062745247",
+        "pollingInterval": 60,
+        "pollingTimeout": 60,
+        "relevantArtifactTypes": "HEAT,HEAT_ENV,HEAT_VOL",
+        "activateServerTLSAuth": "false",
+        "keyStorePassword": "",
+        "keyStorePath": ""
+      },
+
+      "asdc-controller2":
+      {
+        "user": "user",
+        "consumerGroup": "mso",
+        "consumerId": "mso",
+        "environmentName": "PROD",
+        "asdcAddress": "asdc_hostname2:8443",
+        "password": "f3895035812addbf115bfaf7d2dc850e",
+        "pollingInterval": 60,
+        "pollingTimeout": 60,
+        "relevantArtifactTypes": "HEAT,HEAT_ENV,HEAT_VOL",
+        "activateServerTLSAuth": "false",
+        "keyStorePassword": "",
+        "keyStorePath": ""
+      }
+    },
+
+    "mso-sdnc-adapter-config":
+    {
+      "sdncurls":
+      [
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/L3SDN-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/config/L3SDN-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/Firewall-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/config",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/VNF-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/NBNC-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/NORTHBOUND-API:service-topology-operation",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/GENERIC-RESOURCE-API:",
+        "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/VNFTOPOLOGYAIC-API:"
+      ],
+
+      "bpelurl": "http://c1.vm1.mso.simpledemo.openecomp.org:8080/mso/SDNCAdapterCallbackService",
+      "restbpelurl": "http://c1.vm1.mso.simpledemo.openecomp.org:8080/mso/WorkflowMessage",
+      "myurl": "http://c1.vm1.mso.simpledemo.openecomp.org:8080/adapters/rest/SDNCNotify",
+      "sdncauth": "263f7d5f944d4d0c76db74b4148bec67d0bc796a874bc0d2a2a12aae89a866aa69133f700f391f784719a37f6a68d29bf5a2fbae1dab0402db7788c800c5ba73",
+      "bpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1",
+      "sdncconnecttime": "5000"
+    },
+
+    "mso-po-adapter-config":
+    {
+      "identity_services":
+      [
         {
-            "bpelURL": "http://mso:8080",
-            "bpelAuth": "786864AA53D0DCD881AED1154230C0C3058D58B9339D2EFB6193A0F0D82530E1",
-            "camundaURL": "http://mso:8080",
-            "camundaAuth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1"
-        },
-
-        "asdc-connections":
-        {
-            "asdc-controller1":
-            {
-                "user": "mso",
-                "consumerGroup": "sdc-OpenSource-Env1",
-                "consumerId": "sdc-COpenSource-Env11",
-                "environmentName": "SDC-OpenSource-Env1",
-                "asdcAddress": "c2.vm1.sdc.simpledemo.openecomp.org:8443",
-                "password": "613AF3483E695524F9857643B697FA51C7A9A0951094F53791485BF3458F9EADA37DBACCCEBD0CB242B85B4062745247",
-                "pollingInterval": 60,
-                "pollingTimeout": 60,
-                "relevantArtifactTypes": "HEAT,HEAT_ENV,HEAT_VOL",
-                "activateServerTLSAuth": "false",
-                "keyStorePassword": "",
-                "keyStorePath": ""
-            }
-        },
-
-        "mso-sdnc-adapter-config":
-        {
-            "sdncurls":
-            [
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/L3SDN-API:",
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/config/L3SDN-API:",
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/Firewall-API:",
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/config",
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/VNF-API:",
-                "http://c1.vm1.sdnc.simpledemo.openecomp.org:8282/restconf/operations/NBNC-API:"
-            ],
-
-            "bpelurl": "http://c1.vm1.mso.simpledemo.openecomp.org:8080/mso/SDNCAdapterCallbackService",
-            "myurl": "http://c1.vm1.mso.simpledemo.openecomp.org:8080/adapters/rest/SDNCNotify",
-            "sdncauth": "263f7d5f944d4d0c76db74b4148bec67d0bc796a874bc0d2a2a12aae89a866aa69133f700f391f784719a37f6a68d29bf5a2fbae1dab0402db7788c800c5ba73",
-            "bpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1",
-            "sdncconnecttime": "5000"
-        },
-
-       "mso-po-adapter-config":
-        {
-            "identity_services":
-            [
-                {
-                    "dcp_clli": "RAX_KEYSTONE",
-                    "identity_url": "https://identity.api.rackspacecloud.com/v2.0",
-                    "mso_id": "RACKSPACE_ACCOUNT_ID",
-                    "mso_pass": "RACKSPACE_ACCOUNT_APIKEY",
-                    "admin_tenant": "service",
-                    "member_role": "admin",
-                    "tenant_metadata": "true",
-                    "identity_server_type": "KEYSTONE",
-                    "identity_authentication_type": "RACKSPACE_APIKEY"
-                }
-            ],
-
-            "cloud_sites":
-            [
-                {
-                    "id": "Dallas",
-                    "aic_version": "2.5",
-                    "lcp_clli": "DFW",
-                    "region_id": "DFW",
-                    "identity_service_id": "RAX_KEYSTONE"
-                },
-
-                {
-                    "id": "Northern Virginia",
-                    "aic_version": "2.5",
-                    "lcp_clli": "IAD",
-                    "region_id": "IAD",
-                    "identity_service_id": "RAX_KEYSTONE"
-                },
-
-                {
-                    "id": "Chicago",
-                    "aic_version": "2.5",
-                    "lcp_clli": "ORD",
-                    "region_id": "ORD",
-                    "identity_service_id": "RAX_KEYSTONE"
-                }
-            ],
-
-            "vnfbpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1",
-            "checkrequiredparameters": "true",
-            "nwbpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1"
-        },
-
-        "mso-bpmn-config":
-        {
-            "urnFileSystemLoadingEnabled": "true"
-        },
-
-        "mso-bpmn-urn-config":
-        {
-            "logDebugAsyncQueryAAICustomer": "false",
-            "logDebugChangeFeatureActivateV1": "false",
-            "logDebugChangeLayer3ServiceActivateV1": "false",
-            "logDebugChangeLayer3ServiceProvV1": "false",
-            "logDebugLayer3TestAndTurnUpV1": "false",
-            "logDebugVnfAdapterRollbackV1": "false",
-            "logDebugVnfAdapterQueryV1": "false",
-            "logDebugCreateNetworkV1": "false",
-            "logDebugCreateCinderVolumeV1": "false",
-            "logDebugDeleteCinderVolumeV1": "false",
-            "logDebugUpdateCinderVolumeV1": "false",
-            "logDebugDeleteGenericVNFV1": "false",
-            "logDebugDisconnectLayer3Service": "false",
-            "logDebugCompleteMsoProcess": "false",
-            "logDebugCreateCustomerV1": "false",
-            "logDebugCreateTenantV1": "false",
-            "logDebugDeleteNetworkV1": "false",
-            "logDebugDeleteTenantV1": "false",
-            "logDebugDeleteVCEV1": "false",
-            "logDebugGetLayer3ServiceDetailsV1": "false",
-            "logDebugL3ToHigherLayerAddBonding": "false",
-            "logDebugL3ToHigherLayerDeleteBonding": "false",
-            "logDebugLayer3ServiceActivateV1": "false",
-            "logDebugQueryAAICustomer": "false",
-            "logDebugQueryTenantInfo": "false",
-            "logDebugSdncAdapter": "false",
-            "logDebugVnfAdapterCreateV1": "false",
-            "logDebugVnfAdapterDeleteV1": "false",
-            "logDebugRemoveLayer3Service": "false",
-            "logDebugUpdateNetworkV2": "false",
-            "logDebugCreateVfModuleVolumeInfraV1": "false",
-            "logDebugDeleteVfModuleVolumeInfraV1": "false",
-            "logDebugUpdateVfModuleVolumeInfraV1": "false",
-            "logDebugCreateServiceInstanceInfra": "false",
-            "logDebugDeleteServiceInstanceInfra": "false",
-            "logDebugCreateNetworkInstanceInfra": "false",
-            "logDebugDeleteNetworkInstanceInfra": "false",
-            "logDebugUpdateNetworkInstanceInfra": "false",
-            "aaiEndpoint": "https://c1.vm1.aai.simpledemo.openecomp.org:8443",
-            "adaptersCompletemsoprocessEndpoint": "http://mso:8080/CompleteMsoProcess",
-            "adaptersDbEndpoint": "http://mso:8080/dbadapters/RequestsDbAdapter",
-            "adaptersSdncEndpoint": "http://mso:8080/adapters/SDNCAdapter",
-            "adaptersTenantEndpoint": "http://mso:8080/tenants/TenantAdapter",
-            "workflowSdncadapterCallback": "http://mso:8080/mso/SDNCAdapterCallbackService",
-            "msoKey": "07a7159d3bf51a0e53be7a8f89699be7",
-            "adaptersPoAuth": "6B0E6863FB8EE010AB6F191B3C0489437601E81DC7C86305CB92DB98AFC53D74",
-            "sdncTimeout": "PT5M",
-            "rollback": "true",
-            "adaptersNetworkEndpoint": "http://mso:8080/networks/NetworkAdapter",
-            "adaptersNetworkRestEndpoint": "http://mso:8080/networks/rest/v1/networks",
-            "adaptersVnfAsyncEndpoint": "http://mso/vnfs/VnfAdapterAsync",
-            "workflowVnfAdapterDeleteCallback": "http://mso:8080/mso/vnfAdapterNotify",
-            "workflowVnfAdapterCreateCallback": "http://mso:8080/mso/vnfAdapterNotify",
-            "adaptersVnfRestEndpoint": "http://mso:8080/vnfs/rest/v1/vnfs",
-            "workflowVnfAdapterRestCallback": "http://mso:8080/mso/vnfAdapterRestNotify",
-            "poTimeout": "PT5M",
-            "sdncFirewallYangModel": "http://com/att/svc/mis/firewall-lite-gui",
-            "sdncFirewallYangModelVersion": "2015-05-15",
-            "sdncTimeoutFirewall": "20",
-            "callbackRetryAttempts": "30",
-            "callbackRetrySleepTime": "1000",
-            "workflowDefaultAAINetworkGenericVnfUri": "/aai/v8/network/generic-vnfs/generic-vnf",
-            "workflowDeleteGenericVNFV1AAINetworkGenericVnfUri": "/aai/v8/network/generic-vnfs/generic-vnf",
-            "workflowDefaultAAINetworkVpnBindingUri": "/aai/v8/network/vpn-bindings/vpn-binding",
-            "workflowCreateNetworkV1AAINetworkVpnBindingUri": "",
-            "workflowDefaultAAINetworkVceUri": "/aai/v8/network/vces/vce",
-            "workflowDeleteVCEV1AAINetworkVceUri": "",
-            "workflowDefaultAAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
-            "workflowCreateNetworkV1AAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
-            "workflowDeleteNetworkV1AAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
-            "workflowDefaultAAIBusinessCustomerUri": "/aai/v8/business/customers/customer",
-            "workflowDefaultAAICloudInfrastructureVolumeGroupUri": "/aai/v8/cloud-infrastructure/volume-groups/volume-group",
-            "workflowCreateCinderVolumeV1AAICloudInfrastructureVolumeGroupUri": "",
-            "workflowDefaultAAICloudInfrastructureTenantUri": "/aai/v8/cloud-infrastructure/tenants/tenant",
-            "workflowDefaultAAISearchGenericQueryUri": "/aai/v8/search/generic-query",
-            "aaiAuth": "2630606608347B7124C244AB0FE34F6F"
+          "dcp_clli": "RAX_KEYSTONE",
+          "identity_url": "https://identity.api.rackspacecloud.com/v2.0",
+          "mso_id": "RACKSPACE_ACCOUNT_ID",
+          "mso_pass": "RACKSPACE_ACCOUNT_APIKEY",
+          "admin_tenant": "service",
+          "member_role": "admin",
+          "tenant_metadata": "true",
+          "identity_server_type": "KEYSTONE",
+          "identity_authentication_type": "RACKSPACE_APIKEY"
         }
+      ],
+
+      "cloud_sites":
+      [
+        {
+          "id": "Dallas",
+          "aic_version": "2.5",
+          "lcp_clli": "DFW",
+          "region_id": "DFW",
+          "identity_service_id": "RAX_KEYSTONE"
+        },
+
+        {
+          "id": "Northern Virginia",
+          "aic_version": "2.5",
+          "lcp_clli": "IAD",
+          "region_id": "IAD",
+          "identity_service_id": "RAX_KEYSTONE"
+        },
+
+        {
+          "id": "Chicago",
+          "aic_version": "2.5",
+          "lcp_clli": "ORD",
+          "region_id": "ORD",
+          "identity_service_id": "RAX_KEYSTONE"
+        }
+      ],
+
+      "vnfbpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1",
+      "checkrequiredparameters": "true",
+      "nwbpelauth": "5119D1AF37F671FC01FFAD2151D93EFB2BBB503E879FD07104D024EDDF118FD1"
     },
 
-    "override_attributes":
+    "mso-bpmn-config":
     {
+      "urnFileSystemLoadingEnabled": "true"
     },
 
-    "cookbook_versions":
+    "mso-bpmn-urn-config":
     {
-        "mso-config": "~> 1.0.0"
+      "logDebugAsyncQueryAAICustomer": "false",
+      "logDebugChangeFeatureActivateV1": "false",
+      "logDebugChangeLayer3ServiceActivateV1": "false",
+      "logDebugChangeLayer3ServiceProvV1": "false",
+      "logDebugLayer3TestAndTurnUpV1": "false",
+      "logDebugVnfAdapterRollbackV1": "false",
+      "logDebugVnfAdapterQueryV1": "false",
+      "logDebugCreateNetworkV1": "false",
+      "logDebugCreateCinderVolumeV1": "false",
+      "logDebugDeleteCinderVolumeV1": "false",
+      "logDebugUpdateCinderVolumeV1": "false",
+      "logDebugDeleteGenericVNFV1": "false",
+      "logDebugDisconnectLayer3Service": "false",
+      "logDebugCompleteMsoProcess": "false",
+      "logDebugCreateCustomerV1": "false",
+      "logDebugCreateTenantV1": "false",
+      "logDebugDeleteNetworkV1": "false",
+      "logDebugDeleteTenantV1": "false",
+      "logDebugDeleteVCEV1": "false",
+      "logDebugGetLayer3ServiceDetailsV1": "false",
+      "logDebugL3ToHigherLayerAddBonding": "false",
+      "logDebugL3ToHigherLayerDeleteBonding": "false",
+      "invariantIdL3ToHigherLayerDeleteBonding": "50359538-066f-4a8d-807f-f2bc8eaa79dc",
+      "versionIdL3ToHigherLayerDeleteBonding": "52dbec20-47aa-42e4-936c-331d8e350d44",
+      "logDebugLayer3ServiceActivateV1": "false",
+      "logDebugQueryAAICustomer": "false",
+      "logDebugQueryTenantInfo": "false",
+      "logDebugSdncAdapter": "false",
+      "logDebugVnfAdapterCreateV1": "false",
+      "logDebugVnfAdapterDeleteV1": "false",
+      "logDebugRemoveLayer3Service": "false",
+      "logDebugUpdateNetworkV2": "false",
+      "logDebugCreateNetworkV2": "false",
+      "logDebugDeleteNetworkV2": "false",
+      "logDebugCreateVfModuleVolumeInfraV1": "false",
+      "logDebugDeleteVfModuleVolumeInfraV1": "false",
+      "logDebugUpdateVfModuleVolumeInfraV1": "false",
+      "logDebugCreateServiceInstanceInfra": "false",
+      "logDebugDeleteServiceInstanceInfra": "false",
+      "logDebugCreateNetworkInstanceInfra": "false",
+      "logDebugDeleteNetworkInstanceInfra": "false",
+      "logDebugUpdateNetworkInstanceInfra": "false",
+      "logDebugCreateNetworkInstance": "false",
+      "logDebugDoCreateNetworkInstance": "false",
+      "logDebugDoCreateNetworkInstanceRollback": "false",
+      "logDebugDeleteNetworkInstance": "false",
+      "logDebugDoDeleteNetworkInstance": "false",
+      "logDebugDoDeleteNetworkInstanceRollback": "false",
+      "logDebugCreateViprAtmService": "false",
+      "logDebugDeleteViprAtmService": "false",
+      "logDebugGenericGetService": "false",
+      "logDebugGenericPutService": "false",
+      "logDebugGenericDeleteService": "false",
+      "logDebugCreateServiceInstance": "false",
+      "logDebugDelServiceInstance": "false",
+      "logDebugRollbackServiceInstance": "false",
+      "logDebugDoCreateServiceInstanceRollback": "false",
+      "logDebugDoDeleteServiceInstance": "false",
+      "logDebugDoCreateVfModuleVolumeRollback": "false",
+      "logDebugDoDeleteVfModuleVolumeRollback": "false",
+      "logDebugDoDeleteVfModuleVolumeV1": "false",
+      "logDebugDoCreateVfModuleVolumeV1": "false",
+      "mso.sniro.endpoint": "/optimizationInstance/V1/create",
+      "mso.sniro.callback": "/adapters/rest/SDNCNotify/SNIROResponse",
+      "mso.infra.customer.id": "21014aa2-526b-11e6-beb8-9e71128cae77",
+      "aaiEndpoint": "https://c1.vm1.aai.simpledemo.openecomp.org:8443",
+      "adaptersCompletemsoprocessEndpoint": "http://mso:8080/CompleteMsoProcess",
+      "adaptersDbEndpoint": "http://mso:8080/dbadapters/RequestsDbAdapter",
+      "adaptersSdncEndpoint": "http://mso:8080/adapters/SDNCAdapter",
+      "adaptersSdncRestEndpoint": "http://mso:8080/adapters/rest/v1/sdnc",
+      "adaptersTenantEndpoint": "http://mso:8080/tenants/TenantAdapter",
+      "adaptersDbAuth": "6B0E6863FB8EE010AB6F191B3C0489437601E81DC7C86305CB92DB98AFC53D74",
+      "workflowMessageEndpoint": "http://mso:8080/mso/WorkflowMessage",
+      "workflowSdncadApterCallback": "http://mso:8080/mso/SDNCAdapterCallbackService",
+      "msoKey": "07a7159d3bf51a0e53be7a8f89699be7",
+      "adaptersPoAuth": "6B0E6863FB8EE010AB6F191B3C0489437601E81DC7C86305CB92DB98AFC53D74",
+      "sdncTimeout": "PT5M",
+      "rollback": "true",
+      "adaptersNetworkEndpoint": "http://mso:8080/networks/NetworkAdapter",
+      "adaptersNetworkRestEndpoint": "http://mso:8080/networks/rest/v1/networks",
+      "adaptersVnfAsyncEndpoint": "http://mso:8080/vnfs/VnfAdapterAsync",
+      "workflowVnfAdapterDeleteCallback": "http://mso:8080/mso/vnfAdapterNotify",
+      "workflowVnfAdapterCreateCallback": "http://mso:8080/mso/vnfAdapterNotify",
+      "adaptersVnfRestEndpoint": "http://mso:8080/vnfs/rest/v1/vnfs",
+      "workflowVnfAdapterRestCallback": "http://mso:8080/mso/vnfAdapterRestNotify",
+      "poTimeout": "PT5M",
+      "sdncFirewallYangModel": "http://com/att/svc/mis/firewall-lite-gui",
+      "sdncFirewallYangModelVersion": "2015-05-15",
+      "sdncTimeoutFirewall": "20",
+      "callbackRetryAttempts": "30",
+      "callbackRetrySleepTime": "1000",
+      "workflowDefaultAAINetworkGenericVnfUri": "/aai/v8/network/generic-vnfs/generic-vnf",
+      "workflowDeleteGenericVNFV1AAINetworkGenericVnfUri": "/aai/v8/network/generic-vnfs/generic-vnf",
+      "workflowDefaultAAINetworkVpnBindingUri": "/aai/v8/network/vpn-bindings/vpn-binding",
+      "workflowCreateNetworkV1AAINetworkVpnBindingUri": "",
+      "workflowDefaultAAINetworkVceUri": "/aai/v8/network/vces/vce",
+      "workflowDeleteVCEV1AAINetworkVceUri": "",
+      "workflowDefaultAAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
+      "workflowCreateNetworkV1AAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
+      "workflowDeleteNetworkV1AAINetworkL3NetworkUri": "/aai/v8/network/l3-networks/l3-network",
+      "workflowDefaultAAIBusinessCustomerUri": "/aai/v8/business/customers/customer",
+      "workflowDefaultAAICloudInfrastructureVolumeGroupUri": "/aai/v8/cloud-infrastructure/volume-groups/volume-group",
+      "workflowCreateCinderVolumeV1AAICloudInfrastructureVolumeGroupUri": "",
+      "workflowDefaultAAICloudInfrastructureTenantUri": "/aai/v8/cloud-infrastructure/tenants/tenant",
+      "workflowDefaultAAISearchGenericQueryUri": "/aai/v8/search/generic-query",
+      "aaiAuth": "2630606608347B7124C244AB0FE34F6F",
+      "workflowL3ToHigherLayerAddBondingModelName" : "WAN Bonding",
+      "workflowL3ToHigherLayerAddBondingModelVersion" : "2.0",
+      "infraCustomerId": "21014aa2-526b-11e6-beb8-9e71128cae77",
+      "sniroAuth": "test:testpwd",
+      "sniroCallback": "http://mso:8080/adapters/rest/SDNCNotify/SNIROResponse",
+      "sniroEndpoint": "https://TODO.att.com:14699/sniro/api/v1/placement",
+      "sniroTimeout": "PT30M",
+      "sniroPoliciesDHV2vvig": "SNIRO.DistanceToLocationPolicy_vhngw,SNIRO.VNFPolicy_vhngatewayprimary1_v1,SNIRO.ResourceInstancePolicy_hngateway,SNIRO.ResourceRegionPolicy_hngateway_v1,SNIRO.VNFPolicy_vhngatewaysecondary1_v1,SNIRO.ZonePolicy_vhngw,SNIRO.PlacementOptimizationPolicy_dhv_v3,SNIRO.VNFPolicy_vhnportal_primary1_v1,SNIRO.ResourceInstancePolicy_vhnportal_v3,SNIRO.ResourceRegionPolicy_vhnportal_v1,SNIRO.VNFPolicy_vhnportalsecondary1_v1,SNIRO.ZonePolicy_vhnportal,SNIRO.DistanceToLocationPolicy_vvig,SNIRO.InventoryGroupPolicy_vvig,SNIRO.VNFPolicy_vvigprimary1_v1,SNIRO.ResourceInstancePolicy_vvig,SNIRO.VNFPolicy_vvigsecondary1_v1",
+      "sniroPoliciesDHV4vvig": "SNIRO.DistanceToLocationPolicy_vhngw,SNIRO.VNFPolicy_vhngatewayprimary1_v1,SNIRO.ResourceInstancePolicy_hngateway,SNIRO.ResourceRegionPolicy_hngateway_v1,SNIRO.VNFPolicy_vhngatewaysecondary1_v1,SNIRO.ZonePolicy_vhngw,SNIRO.PlacementOptimizationPolicy_dhv_v3,SNIRO.VNFPolicy_vhnportal_primary1_v1,SNIRO.ResourceInstancePolicy_vhnportal_v3,SNIRO.ResourceRegionPolicy_vhnportal_v1,SNIRO.VNFPolicy_vhnportalsecondary1_v1,SNIRO.ZonePolicy_vhnportal,SNIRO.VNFPolicy_vvigprimary2_v1,SNIRO.VNFPolicy_vvigsecondary2_v1,SNIRO.DistanceToLocationPolicy_vvig,SNIRO.InventoryGroupPolicy_vvig,SNIRO.VNFPolicy_vvigprimary1_v1,SNIRO.ResourceInstancePolicy_vvig,SNIRO.VNFPolicy_vvigsecondary1_v1",
+      "catalogDbEndpoint": "http://mso:8080/ecomp/mso/catalog"
     }
+  },
+
+  "override_attributes":
+  {
+  },
+
+  "cookbook_versions":
+  {
+    "mso-config": "~> 1.0.0"
+  }
 }
